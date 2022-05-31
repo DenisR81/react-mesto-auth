@@ -1,11 +1,5 @@
 import React from "react";
-import {
-  BrowserRouter,
-  Route,
-  Switch,
-  Redirect,
-  useHistory,
-} from "react-router-dom";
+import { Route, Switch, Redirect, useHistory } from "react-router-dom";
 import ProtectedRoute from "./ProtectedRoute";
 import Login from "./Login";
 import Register from "./Register";
@@ -193,58 +187,50 @@ function App() {
     tokenCheck();
   }, []);
 
-  /* React.useEffect(() => {
-    if (loggedIn) {
-      history.push("/");
-    }
-  }, [loggedIn, history]);*/
-
   return (
     <div className="page">
       <CurrentUserContext.Provider value={currentUser}>
-        <BrowserRouter>
-          <Switch>
-            <Route exact path="/signin">
-              <Login
-                handleLogin={handleLogin}
-                tokenCheck={tokenCheck}
-                loggedIn={loggedIn}
-              />
-            </Route>
-            <Route exact path="/signup">
-              <div className="registerContainer">
-                <Register handleRegister={handleRegister} />
-              </div>
-            </Route>
+        <Switch>
+          <Route exact path="/signin">
+            <Login
+              handleLogin={handleLogin}
+              tokenCheck={tokenCheck}
+              loggedIn={loggedIn}
+            />
+          </Route>
+          <Route exact path="/signup">
+            <div className="registerContainer">
+              <Register handleRegister={handleRegister} />
+            </div>
+          </Route>
 
-            <ProtectedRoute exact path="/" loggedIn={setLoggedIn}>
-              <Header
-                loggedIn={loggedIn}
-                userData={userData}
-                navText="Выйти"
-                navLink="signin"
-                signOut={signOut}
-              />
+          <ProtectedRoute exact path="/" loggedIn={setLoggedIn}>
+            <Header
+              loggedIn={loggedIn}
+              userData={userData}
+              navText="Выйти"
+              navLink="signin"
+              signOut={signOut}
+            />
 
-              <Main
-                userData={userData}
-                signOut={signOut}
-                onEditProfile={handleEditProfileClick}
-                onAddPlace={handleAddPlaceClick}
-                onEditAvatar={handleEditAvatarClick}
-                onCardClick={handleCardClick}
-                cards={cards}
-                onCardLike={handleCardLike}
-                onCardDelete={handleCardDelete}
-              />
-              <Footer />
-            </ProtectedRoute>
+            <Main
+              userData={userData}
+              signOut={signOut}
+              onEditProfile={handleEditProfileClick}
+              onAddPlace={handleAddPlaceClick}
+              onEditAvatar={handleEditAvatarClick}
+              onCardClick={handleCardClick}
+              cards={cards}
+              onCardLike={handleCardLike}
+              onCardDelete={handleCardDelete}
+            />
+            <Footer />
+          </ProtectedRoute>
 
-            <Route>
-              {loggedIn ? <Redirect to="/" /> : <Redirect to="/signin" />}
-            </Route>
-          </Switch>
-        </BrowserRouter>
+          <Route>
+            {loggedIn ? <Redirect to="/" /> : <Redirect to="/signin" />}
+          </Route>
+        </Switch>
 
         <ImagePopup card={selectedCard} onClose={closeAllPopups} />
         <EditProfilePopup

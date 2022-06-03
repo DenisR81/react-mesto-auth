@@ -46,7 +46,9 @@ function App() {
       .then((data) => {
         if (data.token) {
           localStorage.setItem("jwt", data.token);
-          checkToken();
+          setLoggedIn(true);
+          setUserData(email);
+          history.push("/");
         }
       })
       .catch((err) => {
@@ -90,15 +92,17 @@ function App() {
   };
 
   React.useEffect(() => {
-    Promise.all([api.getUserInfo(), api.getInitialCards()])
-      .then(([userData, cardsData]) => {
-        setCurrentUser(userData);
-        setCards(cardsData);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, []);
+    if (loggedIn) {
+      Promise.all([api.getUserInfo(), api.getInitialCards()])
+        .then(([userData, cardsData]) => {
+          setCurrentUser(userData);
+          setCards(cardsData);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  }, [loggedIn]);
 
   function handleEditAvatarClick() {
     setIsEditAvatarPopupOpen(true);
@@ -198,6 +202,9 @@ function App() {
       })
       .catch((err) => {
         console.log(err);
+      })
+      .finally(() => {
+        setIsLoading(false);
       });
   }
 
@@ -238,8 +245,7 @@ function App() {
               <Register handleRegister={handleRegister} />
             </div>
           </Route>
-
-          <ProtectedRoute exact path="/" loggedIn={setLoggedIn}>
+          <ProtectedRoute exact path="/" loggedIn={loggedIn}>
             <Header
               loggedIn={loggedIn}
               userData={userData}
@@ -247,8 +253,8 @@ function App() {
               navLink="signin"
               signOut={signOut}
             />
-
             <Main
+              loggedIn={loggedIn}
               userData={userData}
               signOut={signOut}
               onEditProfile={handleEditProfileClick}
